@@ -1,0 +1,34 @@
+body {
+    background-color: #FF5F00;	/* HTW-orange */
+    font-size:1rem;
+    font-family: Verdana;
+}
+
+#oben, #unten {background-color: lightcyan;}
+.flex-container, #oben {color: white;}
+#oben {background-color: blue;}
+#links {background-color: cornflowerblue;}
+#mitte {background-color: dodgerblue;}
+#rechts {background-color: midnightblue;}
+#unten {background-color: lightblue;}
+
+@media screen and (min-width: 960px) {
+    body {
+        background-color: #0082D1;
+        font-size: 1.2rem;
+        font-family: Verdana;
+    }
+    .flex-container {display:flex;}
+    .flex_item1 {flex: 1;}
+    .flex_item2 {flex: 4;}
+    .flex_item3 {flex: 2;}
+
+    .flex-container {color: white}
+    #mitte {background-color: darkgreen;}
+    #links {background-color: lightgreen;}
+    #rechts {background-color: green;}
+    #oben, #unten {
+        background-color: lightcyan;
+        color: black;
+    }
+}
