@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Staedte</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+<body onload='createTable(); document.getElementById("filter").focus();'>
+<div class="container">
+	<h1>Städte</h1>
+
+	<form class="form-horizontal" role="form">
+		<div class="form-group row">
+			<label for="filter" class="col-form-label col-2">Filter:</label>
+			<div class="col-10">
+				<input class="form-control" id="filter" oninput="createTable()" placeholder="Stadt oder Gruendungsjahr" >
+			</div>
+		</div>
+	</form>
+
+	<div id="table" >
+	</div>
+
+	<div id="unten"></div>
+</div>
+<script>
+
+	function createTable()
+	{
+		var staedte = [
+			{ "jahr" : 1237, "stadt" : "Berlin", "link" : "http://de.wikipedia.org/wiki/Berlin", "bild" : "images/berlin.png"},
+			{ "jahr" : 1624, "stadt" : "New York", "link" : "http://de.wikipedia.org/wiki/New_York_City", "bild" : "images/newyork.png"},
+			{ "jahr" : 1252, "stadt" : "Stockholm", "link" : "http://de.wikipedia.org/wiki/Stockholm", "bild" : "images/stockholm.png"},
+			{ "jahr" : 852, "stadt" : "Madrid", "link" : "http://de.wikipedia.org/wiki/Madrid", "bild" : "images/madrid.png"},
+			{ "jahr" : 1827, "stadt" : "Bremerhaven", "link" : "http://de.wikipedia.org/wiki/Bremerhaven", "bild" : "images/bremerhaven.png"},
+			{ "jahr" : 150, "stadt" : "Bremen", "link" : "http://de.wikipedia.org/wiki/Bremen", "bild" : "images/bremen.png"},
+			{ "jahr" : 1202, "stadt" : "Bernau", "link" : "http://de.wikipedia.org/wiki/Bernau_bei_Berlin", "bild" : "images/bernau.png"},
+			{ "jahr" : 929, "stadt" : "Brandenburg", "link" : "http://de.wikipedia.org/wiki/Brandenburg_an_der_Havel", "bild" : "images/brandenburg.png"},
+			{ "jahr" : 805, "stadt" : "Magdeburg", "link" : "http://de.wikipedia.org/wiki/Magdeburg", "bild" : "images/magdeburg.png"},
+			{ "jahr" : 1222, "stadt" : "Marburg", "link" : "http://de.wikipedia.org/wiki/Marburg", "bild" : "images/marburg.png"},
+			{ "jahr" : 766, "stadt" : "Mannheim", "link" : "http://de.wikipedia.org/wiki/Mannheim", "bild" : "images/mannheim.png"},
+			{ "jahr" : 782, "stadt" : "Mainz", "link" : "http://de.wikipedia.org/wiki/Mainz", "bild" : "images/mainz.png"}
+		];
+
+		let input = document.getElementById('filter').value;		// eingegebene Daten (Formular)
+		console.log(input);  //wichtig zB für debuggen!
+
+		let tableDiv = document.getElementById('table');
+		if(tableDiv.firstChild) tableDiv.removeChild(tableDiv.firstChild);  //"wenn in tableDiv was drinnen ist: dann das da drinnen löschen
+
+		let table = document.createElement('TABLE');
+		table.setAttribute('class', 'table table-striped');		// Bootstrap
+		let thead = document.createElement('THEAD');
+		let tr = document.createElement('TR');
+		let th = document.createElement('TH');
+		let tbody = document.createElement('TBODY');
+		let td = document.createElement('TD');
+
+		let _tr = tr.cloneNode(false);							// Variable für Clone von tr; false:kinder daran nicht mitklonen
+		let _td = td.cloneNode(false);							// Variable für Clone von td
+
+		// ab hier Spaltenüberschriften
+		let _th = th.cloneNode(false);
+		let _text = document.createTextNode('Nr');
+		_th.appendChild(_text);
+		tr.appendChild(_th);
+
+		_th = th.cloneNode(false);
+		_text = document.createTextNode('Jahr');
+		_th.appendChild(_text);
+		tr.appendChild(_th);
+
+		_th = th.cloneNode(false);
+		_text = document.createTextNode('Stadt');
+		_th.appendChild(_text);
+		tr.appendChild(_th);
+
+		_th = th.cloneNode(false);
+		_text = document.createTextNode('Link');
+		_th.appendChild(_text);
+		tr.appendChild(_th);
+
+		_th = th.cloneNode(false);
+		_text = document.createTextNode('Bild');
+		_th.appendChild(_text);
+		tr.appendChild(_th);
+
+		thead.appendChild(tr);			// Spaltenueberschriften an thead haengen
+		table.appendChild(thead);		// thead an die Tabelle haengen
+
+
+		//tabelle erzeugen, die so viele Spalten und Zeilen wie Städte-Array:
+		for(let i=0; i<staedte.length; i++) //man kann auch var statt let schreiben. sobald man es weglässt wird es globale Variable, wollen wir hier nicht
+		{
+			if(staedte[i].stadt.substring(0, input.length).toLocaleLowerCase()==input.toLocaleLowerCase()
+					|| staedte[i].jahr.toString().substring(0, input.length)==input) {
+				_tr = tr.cloneNode(false);
+
+				_td = td.cloneNode(false); //statt klonen könnte man auch immer neues td erstellen
+				_text = document.createTextNode((i + 1).toString());
+				_td.appendChild(_text);
+				_tr.appendChild(_td);
+
+				_td = td.cloneNode(false);
+				_text = document.createTextNode(staedte[i].jahr.toString());
+				_td.appendChild(_text);
+				_tr.appendChild(_td);
+
+				_td = td.cloneNode(false);
+				_text = document.createTextNode(staedte[i].stadt);
+				_td.appendChild(_text);
+				_tr.appendChild(_td);
+
+
+				_td = td.cloneNode(false);
+				let a = document.createElement(('a'));
+				a.classList.add('btn', 'btn-sm', 'btn-success'); //oder: a.setAttribut('class', btn, btn-sm, btn-success');
+				a.href = staedte[i].link;			//oder so: a.setAttribut('href', stadte[i].link)
+				a.innerHTML = 'Info';  //oder über textNode
+				a.setAttribute('target', '_blank');
+				_td.appendChild(a);
+				_tr.appendChild(_td);
+
+
+				_td = td.cloneNode(false);
+				let img = document.createElement('img');
+				img.src = staedte[i].bild;
+				img.style.height = '60px';
+				img.setAttribute('alt', staedte[i].stadt);  //wenn Bild nicht geladen wird, wird Text angezeigt
+				img.addEventListener("click", zeigeUnten);	//Bei Anklicken des Bildes wird Funktion zeigeUnten aufgerufen
+				_td.appendChild(img);
+				_tr.appendChild(_td);
+
+				tbody.appendChild(_tr);
+			}
+		}
+		table.appendChild(thead);
+		table.appendChild(tbody);
+		tableDiv.appendChild(table);
+	}
+
+	function zeigeUnten(i) {
+
+		let img = i.currentTarget;
+		let _img = img.cloneNode(false);
+		let divUnten = document.getElementById("unten");
+
+		divUnten.appendChild(_img);
+
+	}
+</script>
+</body>
+</html>
