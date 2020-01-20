@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Klausur</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        footer {
+            position: absolute;
+            bottom: 0;
+            background-color: #888888;
+            text-align: center;
+            padding: 20px;
+            width: 100%;
+            height: 80px}
+        footer>a, footer>a:hover, footer>a:visited, footer>a:link {
+            text-decoration : none;
+            font-weight:bold;
+            color : white;
+        }
+        header {
+            background-color : #888888;
+            text-align : center;
+            color : white;
+            width:100%;
+            height:80px;
+            padding : 10px;
+        }
+        #anweisungOben {
+            color: red;
+            text-align: center
+        }
+        #messBilder, #messSpalten {
+            color: red;
+            display: none;
+        }
+        .kachel {color: white;
+            box-shadow: 8px 5px 0px black;
+            background-color: grey;
+            margin: 10px; height: 30px;
+            text-align: center;
+        }
+        #kacheln {display: none;}
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <header id="oben">
+        <h1>Titel</h1>
+    </header>
+
+    <div id="main">
+        <div id="anweisungOben">Wählen Sie die Anzahl der Spalten (1-4) und die Anzahl der Bilder (4-10) aus</div>
+
+        <!--     formular:-->
+
+        <div id="formcontainer" class="container-fluid">
+
+
+            <form id="form" role="form" class="form-horizontal">
+                <div class="form-group row">
+                    <label for="spaltenInput" class="control-label col-12 col-sm-6 col-md-4">Anzahl Spalten:</label>
+                    <div class="col-12 col-sm-6 col-md-8">
+                        <input class="form-control" type="number" id="spaltenInput" name="spalten" onchange="control()" class="">
+                        <div id="messSpalten">Anzahl der Spalten muss!</div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="bilderInput" class="control-label col-12 col-sm-6 col-md-4">Anzahl Bilder:</label>
+                    <div class="col-12 col-sm-6 col-md-8">
+                        <input type="number" class="form-control" id="bilderInput" name="bilder" onchange="control()">
+                        <div id="messBilder">Anzahl der Bilder muss!</div>
+                    </div>
+                </div>
+                <button type="submit">Weiter</button>
+            </form>
+        </div>
+    </div>
+
+
+    <div id="kacheln" class="container-fluid">
+
+    </div>
+
+    <footer id="unten">
+        <a href="webtech.f4.htw-berlin.de/~s0569727/WebTechRepository/index.html">Milena Pustet</a>
+    </footer>
+</div>
+
+
+<script>
+
+    function control() {
+
+        let spaltenFeld = document.getElementById("spaltenInput");
+        let bilderFeld = document.getElementById("bilderInput");
+
+        let spaltenWert = spaltenFeld.value;
+        let bilderWert = bilderFeld.value;
+
+        let spaltenFehler= true;
+        let bilderFehler = true;
+
+        if(spaltenWert<1 || spaltenWert>4){     //spalte falsch
+            spaltenFehler = true;
+            document.getElementById("messSpalten").style.display="block";
+            spaltenFeld.classList.add("is-invalid");
+        }
+        else if (spaltenFeld.classList.contains("is-invalid")) {     //spalte richtig, zuvor falsch
+            spaltenFeld.classList.remove("is-invalid");
+            spaltenFeld.classList.add("is-valid");
+            spaltenFeld.setAttribute("readonly", "readonly");
+            document.getElementById("messSpalten").style.display="none";
+            spaltenFehler = false;
+
+        }
+        else {          //spalte sofort richtig
+            spaltenFeld.classList.add("is-valid");
+            spaltenFeld.setAttribute("readonly", "readonly");
+            spaltenFehler = false;
+        }
+
+        if(bilderWert<4 || bilderWert>10){
+            bilderFehler = true;
+            document.getElementById("messBilder").style.display="block";
+            bilderFeld.classList.add("is-invalid");
+        }
+        else if(bilderFeld.classList.contains("is-invalid")) {
+            bilderFehler = false;
+            bilderFeld.classList.remove("is-invalid");
+            bilderFeld.classList.add("is-valid");
+            bilderFeld.setAttribute("readonly", "readonly");
+            document.getElementById("messBilder").style.display="none";
+
+        }
+        else {
+            bilderFeld.classList.add("is-valid");
+            bilderFeld.setAttribute("readonly", "readonly");
+            document.getElementById("messBilder").style.display="none";
+            bilderFehler = false;
+        }
+
+        if(bilderFehler || spaltenFehler) {      //wenn (mind) eins der beiden falsch ist
+            document.getElementById("anweisungOben").innerText = "Bitte korrigieren Sie Ihre Eingabe";
+        }
+
+        if(!spaltenFehler&&!bilderFehler) {
+
+            document.getElementById("main").style.display="none";
+            document.getElementById("kacheln").style.display="block";
+
+            for(let i=0; i<bilderWert; i++) {       //anzahl reihen, bzw Bilder
+
+                var row = document.createElement("div");        //reihe erzeugen mit klasse row
+                row.classList.add("row");
+
+                for( let j=0; j<spaltenWert; j++) {             //anzahl spalten
+
+                    let kachel = document.createElement("div");   //kachel erzeugen, der klassen col und kachel zuordnen
+                    kachel.classList.add("kachel");
+                    kachel.innerText=i.toString();                //spalte beschriften
+                    kachel.classList.add("col");
+                    kachel.setAttribute("onclick", "changeColor(this)")
+                    row.appendChild(kachel);                     //spalte an reihe hängen
+
+                }
+                let wDiv = document.createElement('div');       //zeilenumbruch, den an ende der reihe hängen
+                wDiv.classList.add('w-100');
+                row.appendChild(wDiv);
+
+                document.getElementById("kacheln").appendChild(row);  // reihe dem div im body anhängen
+            }
+
+        }
+    }
+
+
+    function changeColor(obj)
+    {
+        if(obj.style.backgroundColor=="red")
+        {
+            obj.style.backgroundColor="green";
+        }
+        else {
+            obj.style.backgroundColor="red";
+        }
+    }
+
+</script>
+</body>
+</html>
